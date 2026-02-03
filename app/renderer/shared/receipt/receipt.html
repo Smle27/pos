@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+body{
+  font-family: monospace;
+  margin:0;
+  padding:8px;
+  width: 58mm;
+}
+.center{text-align:center;}
+.hr{border-top:1px dashed #000;margin:6px 0;}
+.row{display:flex;justify-content:space-between;}
+.small{font-size:11px;}
+.bold{font-weight:bold;}
+</style>
+</head>
+<body>
+  <div class="center bold">{{shopName}}</div>
+  <div class="center small">{{shopPhone}}</div>
+  <div class="hr"></div>
+
+  <div class="small">Receipt: {{receiptNo}}</div>
+  <div class="small">Date: {{date}}</div>
+  <div class="small">Cashier: {{cashier}}</div>
+
+  <div class="hr"></div>
+
+  {{items}}
+
+  <div class="hr"></div>
+
+  <div class="row bold">
+    <span>TOTAL</span>
+    <span>{{total}}</span>
+  </div>
+  <div class="row">
+    <span>Paid</span>
+    <span>{{paid}}</span>
+  </div>
+  <div class="row">
+    <span>Change</span>
+    <span>{{change}}</span>
+  </div>
+
+  <div class="hr"></div>
+  <div class="center small">{{footer}}</div>
+</body>
+</html>

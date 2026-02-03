@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Reports</title>
+  <link rel="stylesheet" href="../../shared/styles/theme.css">
+  <link rel="stylesheet" href="../../shared/styles/layout.css">
+  <link rel="stylesheet" href="../../shared/styles/components.css">
+  <link rel="stylesheet" href="./reports.css">
+</head>
+<body>
+  <div class="shell">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" style="position:relative;">
+      <div class="brand">
+        <div class="logo"></div>
+        <div>
+          <div class="t1">Olives POS</div>
+          <div class="t2">Reports</div>
+        </div>
+      </div>
+
+      <div class="nav">
+        <a href="../pos/pos.html">POS</a>
+        <a href="../admin/admin.html">Admin</a>
+        <a class="active" href="./reports.html">Reports</a>
+        <a href="../settings/settings.html">Settings</a>
+      </div>
+
+      <div class="sidebarFooter">
+        <div class="userCard">
+          <div class="meta">
+            <div class="name" id="whoName">User</div>
+            <div class="role" id="whoRole">ROLE</div>
+          </div>
+          <button class="btn danger" id="logoutBtn">Logout</button>
+        </div>
+        <div class="badge">Tip: Filter dates → Export CSV</div>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+      <div class="topbar">
+        <div>
+          <h1>Reports</h1>
+          <div style="color:var(--muted); font-size:12px;">Sales overview, cashier performance, top products</div>
+        </div>
+        <div class="right">
+          <div class="badge" id="statusBadge">Ready</div>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="card filters">
+        <div class="fRow">
+          <div>
+            <div class="fLabel">From</div>
+            <input class="input" type="date" id="fromDate">
+          </div>
+          <div>
+            <div class="fLabel">To</div>
+            <input class="input" type="date" id="toDate">
+          </div>
+          <div>
+            <div class="fLabel">Cashier (optional)</div>
+            <input class="input" id="cashier" placeholder="e.g. cashier1">
+          </div>
+          <div class="fBtns">
+            <button class="btn primary" id="btnLoad">Load</button>
+            <button class="btn" id="btnToday">Today</button>
+            <button class="btn" id="btnThisWeek">This Week</button>
+          </div>
+        </div>
+
+        <div class="fRow2">
+          <button class="btn" id="btnExportSales">Export Sales CSV</button>
+          <button class="btn" id="btnExportTop">Export Top Products CSV</button>
+        </div>
+      </div>
+
+      <!-- KPI cards -->
+      <div class="kpis">
+        <div class="card kpi">
+          <div class="kTitle">Gross Sales</div>
+          <div class="kVal" id="kGross">0</div>
+          <div class="kSub" id="kGrossSub">—</div>
+        </div>
+        <div class="card kpi">
+          <div class="kTitle">Transactions</div>
+          <div class="kVal" id="kTx">0</div>
+          <div class="kSub" id="kTxSub">—</div>
+        </div>
+        <div class="card kpi">
+          <div class="kTitle">Avg Basket</div>
+          <div class="kVal" id="kAvg">0</div>
+          <div class="kSub" id="kAvgSub">—</div>
+        </div>
+        <div class="card kpi">
+          <div class="kTitle">Cashier</div>
+          <div class="kVal" id="kCashier">All</div>
+          <div class="kSub">Filter optional</div>
+        </div>
+      </div>
+
+      <!-- Tables -->
+      <div class="grid2">
+        <section class="card panel">
+          <div class="panelHeader">
+            <div>
+              <div class="title">Recent Sales</div>
+              <div class="sub">Latest transactions in the selected period</div>
+            </div>
+            <div class="actions">
+              <button class="btn" id="btnRefreshSales">Refresh</button>
+            </div>
+          </div>
+          <div class="panelBody">
+            <div class="tableWrap">
+              <table class="table" id="salesTable">
+                <thead>
+                  <tr>
+                    <th>Time</th>
+                    <th>Receipt</th>
+                    <th>Cashier</th>
+                    <th>Total</th>
+                    <th>Paid</th>
+                    <th>Change</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section class="card panel">
+          <div class="panelHeader">
+            <div>
+              <div class="title">Top Products</div>
+              <div class="sub">Best sellers by qty and value</div>
+            </div>
+            <div class="actions">
+              <button class="btn" id="btnRefreshTop">Refresh</button>
+            </div>
+          </div>
+          <div class="panelBody">
+            <div class="tableWrap">
+              <table class="table" id="topTable">
+                <thead>
+                  <tr>
+                    <th>Product</th>
+                    <th>Qty</th>
+                    <th>Revenue</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </div>
+
+    </main>
+  </div>
+
+  <script type="module" src="./reports.js"></script>
+</body>
+</html>

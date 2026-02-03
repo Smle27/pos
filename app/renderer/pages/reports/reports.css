@@ -1,0 +1,77 @@
+/* app/renderer/pages/reports/reports.css */
+
+.filters{
+  padding: 14px;
+  margin-bottom: 14px;
+}
+.fRow{
+  display:grid;
+  grid-template-columns: 170px 170px 1fr 320px;
+  gap: 12px;
+  align-items:end;
+}
+.fLabel{ color: var(--muted); font-size: 12px; margin-bottom: 6px; }
+.fBtns{ display:flex; gap:10px; justify-content:flex-end; }
+.fRow2{ margin-top: 12px; display:flex; gap: 10px; }
+
+.kpis{
+  display:grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.kpi{ padding: 14px 16px; }
+.kTitle{ color: var(--muted); font-size: 12px; font-weight: 900; }
+.kVal{ font-size: 22px; font-weight: 1000; margin-top: 8px; }
+.kSub{ color: var(--muted); font-size: 12px; margin-top: 4px; }
+
+.grid2{
+  display:grid;
+  grid-template-columns: 1.2fr .8fr;
+  gap: 14px;
+}
+
+.panel{ overflow:hidden; }
+.panelHeader{
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line);
+  display:flex;
+  justify-content: space-between;
+  align-items:center;
+  gap: 12px;
+}
+.panelHeader .title{ font-weight: 1000; font-size: 16px; }
+.panelHeader .sub{ color: var(--muted); font-size: 12px; margin-top:2px; }
+.panelHeader .actions{ display:flex; gap:10px; align-items:center; }
+
+.panelBody{ padding: 14px 16px; }
+
+.tableWrap{
+  border:1px solid var(--line);
+  border-radius: 14px;
+  overflow:hidden;
+  background: rgba(0,0,0,.18);
+}
+.table{
+  width:100%;
+  border-collapse: collapse;
+}
+.table th, .table td{
+  padding: 12px 12px;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  text-align:left;
+}
+.table th{
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: .2px;
+  background: rgba(255,255,255,.03);
+}
+.table tr:hover td{ background: rgba(255,255,255,.03); }
+
+@media (max-width: 1200px){
+  .fRow{ grid-template-columns: 1fr 1fr; }
+  .fBtns{ justify-content:flex-start; }
+  .kpis{ grid-template-columns: 1fr 1fr; }
+  .grid2{ grid-template-columns: 1fr; }
+}

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin</title>
+  <link rel="stylesheet" href="../../shared/styles/theme.css">
+  <link rel="stylesheet" href="../../shared/styles/layout.css">
+  <link rel="stylesheet" href="../../shared/styles/components.css">
+  <link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+  <div class="shell">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" style="position:relative;">
+      <div class="brand">
+        <div class="logo"></div>
+        <div>
+          <div class="t1">Olives POS</div>
+          <div class="t2">Admin Console</div>
+        </div>
+      </div>
+
+      <div class="nav">
+        <a href="../pos/pos.html">POS</a>
+        <a class="active" href="./admin.html">Admin</a>
+        <a href="../reports/reports.html">Reports</a>
+        <a href="../settings/settings.html">Settings</a>
+      </div>
+
+      <div class="sidebarFooter">
+        <div class="userCard">
+          <div class="meta">
+            <div class="name" id="whoName">User</div>
+            <div class="role" id="whoRole">ROLE</div>
+          </div>
+          <button class="btn danger" id="logoutBtn">Logout</button>
+        </div>
+        <div class="badge">Shortcuts: <span class="kbd">Ctrl</span>+<span class="kbd">K</span> Search</div>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+      <div class="topbar">
+        <div>
+          <h1>Admin</h1>
+          <div style="color:var(--muted); font-size:12px;">Manage users, products, stock, and inventory health</div>
+        </div>
+        <div class="right">
+          <input class="input" id="globalSearch" placeholder="Search users/products… (Ctrl+K)" style="width:320px;">
+          <div class="badge" id="statusBadge">Ready</div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab active" data-tab="users">Users</button>
+        <button class="tab" data-tab="products">Products</button>
+        <button class="tab" data-tab="stock">Stock</button>
+        <button class="tab" data-tab="moves">Movements</button>
+        <button class="tab" data-tab="low">Low Stock</button>
+      </div>
+
+      <!-- USERS -->
+      <section class="card panel tabPanel show" id="tab-users">
+        <div class="panelHeader">
+          <div>
+            <div class="title">Users</div>
+            <div class="sub">Create, reset, enable/disable accounts</div>
+          </div>
+          <div class="actions">
+            <button class="btn primary" id="btnNewUser">+ New User</button>
+            <button class="btn" id="btnRefreshUsers">Refresh</button>
+          </div>
+        </div>
+
+        <div class="panelBody">
+          <div class="tableWrap">
+            <table class="table" id="usersTable">
+              <thead>
+                <tr>
+                  <th>Username</th>
+                  <th>Role</th>
+                  <th>Status</th>
+                  <th style="width:260px;">Actions</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- PRODUCTS -->
+      <section class="card panel tabPanel" id="tab-products">
+        <div class="panelHeader">
+          <div>
+            <div class="title">Products</div>
+            <div class="sub">Add/edit products, barcode, pricing</div>
+          </div>
+          <div class="actions">
+            <button class="btn primary" id="btnNewProduct">+ New Product</button>
+            <button class="btn" id="btnRefreshProducts">Refresh</button>
+          </div>
+        </div>
+
+        <div class="panelBody">
+          <div class="tableWrap">
+            <table class="table" id="productsTable">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Barcode</th>
+                  <th>Price</th>
+                  <th>Stock</th>
+                  <th style="width:260px;">Actions</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- STOCK -->
+      <section class="card panel tabPanel" id="tab-stock">
+        <div class="panelHeader">
+          <div>
+            <div class="title">Stock</div>
+            <div class="sub">Receive stock and adjust inventory</div>
+          </div>
+          <div class="actions">
+            <button class="btn success" id="btnReceiveStock">Receive Stock</button>
+            <button class="btn warn" id="btnAdjustStock">Adjust Stock</button>
+          </div>
+        </div>
+
+        <div class="panelBody">
+          <div class="hint">
+            Tip: Use Receive Stock for supplier deliveries. Use Adjust for corrections (loss/damage).
+          </div>
+          <div class="hr"></div>
+          <div class="grid2">
+            <div class="mini card2">
+              <div class="miniTitle">Quick Find Product</div>
+              <input class="input" id="stockSearch" placeholder="Type barcode or name…">
+              <div id="stockSearchResults" style="margin-top:10px;"></div>
+            </div>
+            <div class="mini card2">
+              <div class="miniTitle">Inventory Health</div>
+              <div id="healthBox" class="healthBox">Load Low Stock tab to see alerts.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MOVEMENTS -->
+      <section class="card panel tabPanel" id="tab-moves">
+        <div class="panelHeader">
+          <div>
+            <div class="title">Stock Movements</div>
+            <div class="sub">Audit trail of stock in/out/adjustments</div>
+          </div>
+          <div class="actions">
+            <input class="input" id="movesProductId" placeholder="Product ID (optional)" style="width:220px;">
+            <button class="btn" id="btnLoadMoves">Load</button>
+          </div>
+        </div>
+
+        <div class="panelBody">
+          <div class="tableWrap">
+            <table class="table" id="movesTable">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Product</th>
+                  <th>Delta</th>
+                  <th>Type</th>
+                  <th>Note</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- LOW STOCK -->
+      <section class="card panel tabPanel" id="tab-low">
+        <div class="panelHeader">
+          <div>
+            <div class="title">Low Stock</div>
+            <div class="sub">Items below threshold</div>
+          </div>
+          <div class="actions">
+            <input class="input" id="lowThreshold" placeholder="Threshold (optional)" style="width:220px;">
+            <button class="btn" id="btnLoadLow">Load</button>
+          </div>
+        </div>
+
+        <div class="panelBody">
+          <div class="tableWrap">
+            <table class="table" id="lowTable">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Barcode</th>
+                  <th>Stock</th>
+                  <th>Min</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- MODAL (one reusable) -->
+  <div class="modalBackdrop" id="modal">
+    <div class="modal">
+      <div class="modalHeader">
+        <div style="font-weight:900;" id="modalTitle">Modal</div>
+        <button class="btn" id="modalClose">✕</button>
+      </div>
+      <div class="modalBody" id="modalBody"></div>
+      <div class="modalFooter" id="modalFooter"></div>
+    </div>
+  </div>
+
+  <script type="module" src="./admin.js"></script>
+</body>
+</html>

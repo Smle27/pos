@@ -1,0 +1,68 @@
+CREATE TABLE IF NOT EXISTS products (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  barcode TEXT UNIQUE,
+  name TEXT NOT NULL,
+  cost REAL DEFAULT 0,
+  price REAL NOT NULL,
+  stock INTEGER DEFAULT 0,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS sales (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER,
+  total REAL NOT NULL,
+  payment_method TEXT,
+  stock_override INTEGER DEFAULT 0,
+  override_user_id INTEGER,
+  override_reason TEXT,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS sale_items (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  sale_id INTEGER,
+  product_id INTEGER,
+  barcode TEXT,
+  name TEXT,
+  qty INTEGER,
+  price REAL,
+  cost REAL DEFAULT 0,
+  line_total REAL DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS stock_moves (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  product_id INTEGER NOT NULL,
+  qty_change INTEGER NOT NULL,
+  reason TEXT NOT NULL,
+  ref_type TEXT,
+  ref_id INTEGER,
+  user_id INTEGER,
+  note TEXT,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  username TEXT UNIQUE NOT NULL,
+  role TEXT NOT NULL CHECK(role IN ('ADMIN','CASHIER')),
+  pass_salt TEXT NOT NULL,
+  pass_hash TEXT NOT NULL,
+  pass_iter INTEGER NOT NULL,
+  pass_keylen INTEGER NOT NULL,
+  pass_digest TEXT NOT NULL,
+  must_change_password INTEGER DEFAULT 0,
+  failed_attempts INTEGER DEFAULT 0,
+  locked_until INTEGER DEFAULT 0,
+  is_active INTEGER DEFAULT 1,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS audit_log (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER,
+  action TEXT NOT NULL,
+  meta TEXT,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);

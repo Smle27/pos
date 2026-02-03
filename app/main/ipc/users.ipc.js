@@ -1,0 +1,80 @@
+// app/main/ipc/users.ipc.js
+const { ipcMain } = require("electron");
+const { requireAdmin } = require("../security/permissions");
+
+const usersService = require("../../../backend/services/users.service");
+
+function registerUsersIpc() {
+  // LIST USERS (admin only)
+  ipcMain.handle(
+    "users:list",
+    requireAdmin(async () => {
+      try {
+        const res = await usersService.listUsers?.() ?? await usersService.list?.();
+        return { ok: true, data: res || [] };
+      } catch (err) {
+        return { ok: false, code: "USERS_LIST_ERROR", message: err?.message || "Failed to list users" };
+      }
+    })
+  );
+
+  // CREATE USER (admin only)
+  ipcMain.handle(
+    "users:create",
+    requireAdmin(async (_e, payload) => {
+      try {
+        const { username, role, password } = payload || {};
+        if (!username || !password) {
+          return { ok: false, code: "VALIDATION_ERROR", message: "username & password required" };
+        }
+
+        const res = await usersService.createUser?.({ username, role, password }) ?? await usersService.create?.({ username, role, password });
+        return { ok: true, data: res };
+      } catch (err) {
+        const msg = err?.message || "Failed to create user";
+        const code = msg.toLowerCase().includes("unique") || msg.toLowerCase().includes("username")
+          ? "DUPLICATE_USERNAME"
+          : "USERS_CREATE_ERROR";
+        return { ok: false, code, message: msg };
+      }
+    })
+  );
+
+  // RESET PASSWORD (admin only)
+  ipcMain.handle(
+    "users:resetPassword",
+    requireAdmin(async (_e, payload) => {
+      try {
+        const { userId, newPassword } = payload || {};
+        if (!userId || !newPassword) {
+          return { ok: false, code: "VALIDATION_ERROR", message: "userId & newPassword required" };
+        }
+
+        const res = await usersService.resetUserPassword?.(userId, newPassword) ?? await usersService.resetPassword?.(userId, newPassword);
+        return { ok: true, data: res };
+      } catch (err) {
+        return { ok: false, code: "USERS_RESET_ERROR", message: err?.message || "Failed to reset password" };
+      }
+    })
+  );
+
+  // SET ACTIVE (admin only)
+  ipcMain.handle(
+    "users:setActive",
+    requireAdmin(async (_e, payload) => {
+      try {
+        const { userId, active } = payload || {};
+        if (!userId || typeof active !== "boolean") {
+          return { ok: false, code: "VALIDATION_ERROR", message: "userId & active(boolean) required" };
+        }
+
+        const res = await usersService.setUserActive?.(userId, active) ?? await usersService.setActive?.(userId, active);
+        return { ok: true, data: res };
+      } catch (err) {
+        return { ok: false, code: "USERS_ACTIVE_ERROR", message: err?.message || "Failed to update user" };
+      }
+    })
+  );
+}
+
+module.exports = { registerUsersIpc };

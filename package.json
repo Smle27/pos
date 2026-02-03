@@ -1,0 +1,19 @@
+{
+  "name": "pos-desktop",
+  "version": "1.0.0",
+  "main": "app/main/main.js"
+,
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "dependencies": {
+    "electron": "^30.0.0",
+    "jsbarcode": "^3.12.1",
+    "sql.js": "^1.13.0"
+  },
+  "devDependencies": {
+    "electron-builder": "^24.13.3",
+    "electron-rebuild": "^3.2.9"
+  }
+}

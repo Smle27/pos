@@ -1,0 +1,36 @@
+<section class="card panel">
+  <div class="panelHeader">
+    <div>
+      <div class="title">Printer Settings</div>
+      <div class="sub">Receipt & invoice printing</div>
+    </div>
+  </div>
+
+  <div class="panelBody">
+    <div class="grid2">
+      <div>
+        <label class="fLabel">Printer</label>
+        <select id="printerName" class="input"></select>
+      </div>
+
+      <div>
+        <label class="fLabel">Paper Size</label>
+        <select id="paperSize" class="input">
+          <option value="58">Thermal 58mm</option>
+          <option value="80">Thermal 80mm</option>
+          <option value="A4">A4 Invoice</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="margin-top:12px;">
+      <label class="fLabel">Receipt Footer</label>
+      <input id="receiptFooter" class="input" placeholder="Thank you for shopping with us">
+    </div>
+
+    <div class="fRow2" style="margin-top:14px;">
+      <button class="btn primary" id="savePrinter">Save</button>
+      <button class="btn" id="testPrint">Test Print</button>
+    </div>
+  </div>
+</section>

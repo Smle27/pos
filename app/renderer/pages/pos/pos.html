@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>POS</title>
+  <link rel="stylesheet" href="../../shared/styles/theme.css">
+  <link rel="stylesheet" href="../../shared/styles/layout.css">
+  <link rel="stylesheet" href="../../shared/styles/components.css">
+  <link rel="stylesheet" href="./pos.css">
+</head>
+<body>
+  <div class="shell">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" style="position:relative;">
+      <div class="brand">
+        <div class="logo"></div>
+        <div>
+          <div class="t1">Olives POS</div>
+          <div class="t2">Fast • Offline • Secure</div>
+        </div>
+      </div>
+
+      <div class="nav">
+        <a class="active" href="./pos.html">POS <span class="badge">F2 Pay</span></a>
+        <a href="../admin/admin.html">Admin</a>
+        <a href="../reports/reports.html">Reports</a>
+        <a href="../settings/settings.html">Settings</a>
+      </div>
+
+      <div class="sidebarFooter">
+        <div class="userCard">
+          <div class="meta">
+            <div class="name" id="whoName">User</div>
+            <div class="role" id="whoRole">ROLE</div>
+          </div>
+          <button class="btn danger" id="logoutBtn">Logout</button>
+        </div>
+        <div class="badge">Shortcuts: <span class="kbd">F2</span> Pay <span class="kbd">F4</span> Hold <span class="kbd">F6</span> Search</div>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+      <div class="topbar">
+        <div>
+          <h1>Point of Sale</h1>
+          <div style="color:var(--muted); font-size:12px;">Scan barcode or search product • Add qty • Checkout</div>
+        </div>
+        <div class="right">
+          <div class="badge">Cart: <span id="cartCount">0</span></div>
+          <div class="badge">Total: <span id="cartTotal">0</span></div>
+        </div>
+      </div>
+
+      <div class="posGrid">
+        <!-- LEFT: PRODUCTS -->
+        <section class="card pane">
+          <div class="paneHeader">
+            <div style="font-weight:900;">Products</div>
+            <div class="paneTools">
+              <input class="input" id="barcodeInput" placeholder="Scan barcode or type…" />
+              <button class="btn" id="searchBtn">Search</button>
+            </div>
+          </div>
+
+          <div class="paneBody" id="productList">
+            <!-- products render here -->
+          </div>
+        </section>
+
+        <!-- RIGHT: CART -->
+        <section class="card pane">
+          <div class="paneHeader">
+            <div style="font-weight:900;">Cart</div>
+            <div class="paneTools">
+              <button class="btn" id="holdBtn">Hold <span class="kbd">F4</span></button>
+              <button class="btn danger" id="clearBtn">Clear</button>
+            </div>
+          </div>
+
+          <div class="paneBody" id="cartList"></div>
+
+          <div class="cartFooter">
+            <div class="row">
+              <div class="muted">Subtotal</div>
+              <div id="subTotal" class="val">0</div>
+            </div>
+            <div class="row">
+              <div class="muted">Discount</div>
+              <div class="val">
+                <input class="input" id="discountInput" placeholder="0" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="muted">Grand Total</div>
+              <div id="grandTotal" class="val" style="font-size:18px;font-weight:900;">0</div>
+            </div>
+
+            <button class="btn success payBtn" id="payBtn">
+              Pay <span class="kbd">F2</span>
+            </button>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- PAYMENT MODAL -->
+  <div class="modalBackdrop" id="payModal">
+    <div class="modal">
+      <div class="modalHeader">
+        <div style="font-weight:900;">Payment</div>
+        <button class="btn" id="closePay">✕</button>
+      </div>
+      <div class="modalBody">
+        <div class="grid2">
+          <div>
+            <div class="badge">Grand Total</div>
+            <div style="font-size:22px; font-weight:900; margin-top:8px;" id="payTotal">0</div>
+          </div>
+          <div>
+            <label style="color:var(--muted); font-size:12px;">Method</label>
+            <select id="payMethod">
+              <option value="CASH">CASH</option>
+              <option value="MOMO">MOMO</option>
+              <option value="CARD">CARD</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-top:12px;">
+          <label style="color:var(--muted); font-size:12px;">Amount received</label>
+          <input class="input" id="payAmount" placeholder="0" />
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="grid2">
+          <div class="badge">Paid: <span id="paidView">0</span></div>
+          <div class="badge">Change: <span id="changeView">0</span></div>
+        </div>
+
+        <div style="margin-top:12px; display:grid; grid-template-columns:repeat(3, 1fr); gap:10px;">
+          <button class="btn" data-k="7">7</button>
+          <button class="btn" data-k="8">8</button>
+          <button class="btn" data-k="9">9</button>
+          <button class="btn" data-k="4">4</button>
+          <button class="btn" data-k="5">5</button>
+          <button class="btn" data-k="6">6</button>
+          <button class="btn" data-k="1">1</button>
+          <button class="btn" data-k="2">2</button>
+          <button class="btn" data-k="3">3</button>
+          <button class="btn" data-k="0">0</button>
+          <button class="btn" data-k="00">00</button>
+          <button class="btn danger" data-k="C">C</button>
+        </div>
+      </div>
+      <div class="modalFooter">
+        <button class="btn" id="cancelPay">Cancel</button>
+        <button class="btn success" id="confirmPay">Confirm Sale</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./pos.js"></script>
+</body>
+</html>
