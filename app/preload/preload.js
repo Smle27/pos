@@ -79,11 +79,36 @@ contextBridge.exposeInMainWorld("pos", {
   setStock: (token, payload) =>
     invoke("stock:set", { ...(payload || {}) }, token),
 
-  // USERS
-  listUsers: (token) => invoke("users:list", {}, token),
-  createUser: (token, payload) => invoke("users:create", { ...(payload || {}) }, token),
-  resetUserPassword: (token, payload) => invoke("users:resetPassword", { ...(payload || {}) }, token),
-  setUserActive: (token, payload) => invoke("users:setActive", { ...(payload || {}) }, token),
+   // USERS (backward compatible)
+  listUsers: (arg1, arg2) => {
+    // listUsers(token) OR listUsers(payload) OR listUsers(payload, token)
+    const isToken = (v) => typeof v === "string" && v.length > 10; // tokens are usually long
+    const token = isToken(arg1) ? arg1 : (isToken(arg2) ? arg2 : null);
+    const payload = isToken(arg1) ? {} : (arg1 || {});
+    return invoke("users:list", payload, token);
+  },
+
+  createUser: (arg1, arg2) => {
+    // createUser(token, payload) OR createUser(payload) OR createUser(payload, token)
+    const isToken = (v) => typeof v === "string" && v.length > 10;
+    const token = isToken(arg1) ? arg1 : (isToken(arg2) ? arg2 : null);
+    const payload = isToken(arg1) ? (arg2 || {}) : (arg1 || {});
+    return invoke("users:create", { ...(payload || {}) }, token);
+  },
+
+  resetUserPassword: (arg1, arg2) => {
+    const isToken = (v) => typeof v === "string" && v.length > 10;
+    const token = isToken(arg1) ? arg1 : (isToken(arg2) ? arg2 : null);
+    const payload = isToken(arg1) ? (arg2 || {}) : (arg1 || {});
+    return invoke("users:resetPassword", { ...(payload || {}) }, token);
+  },
+
+  setUserActive: (arg1, arg2) => {
+    const isToken = (v) => typeof v === "string" && v.length > 10;
+    const token = isToken(arg1) ? arg1 : (isToken(arg2) ? arg2 : null);
+    const payload = isToken(arg1) ? (arg2 || {}) : (arg1 || {});
+    return invoke("users:setActive", { ...(payload || {}) }, token);
+  },
 
   // REPORTS
   reportsSummary: (token, payload) => invoke("reports:summary", { ...(payload || {}) }, token),

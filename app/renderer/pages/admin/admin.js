@@ -1,6 +1,7 @@
 import { toast } from "../../shared/components/toast.js";
 
 const token = localStorage.getItem("token");
+try { window.pos?.setToken?.(token); } catch (_) {}
 
 const el = {
   whoName: document.getElementById("whoName"),
@@ -192,11 +193,13 @@ function closeModal() {
 /* ---------------- USERS ---------------- */
 async function loadUsers() {
   setStatus("Loading users…");
-  const r = await window.pos.listUsers?.(token);
+
+  // Prefer payload-style (works with your current IPC)
+  const r = await window.pos.listUsers?.({ limit: 500 });
 
   if (!r) {
     setStatus("Users IPC missing");
-    toast("Users IPC not wired yet (see code below)", "danger");
+    toast("Users IPC not wired yet", "danger");
     return;
   }
   if (!r.ok) {
@@ -206,8 +209,9 @@ async function loadUsers() {
 
   usersCache = r.data || [];
   renderUsers(usersCache);
-  setStatus("Users loaded");
+  setStatus(`Users loaded (${usersCache.length})`);
 }
+
 
 function filterUsers(q) {
   return usersCache.filter((u) => (u.username || "").toLowerCase().includes(q));
@@ -222,27 +226,32 @@ function renderUsers(list) {
 
   list.forEach((u) => {
     const tr = document.createElement("tr");
+
     const rolePill = u.role === "ADMIN" ? "admin" : "cashier";
-    const statusPill = u.active === false ? "off" : "ok";
+
+    // ✅ correct field: is_active (0/1)
+    const isActive = !(u.is_active === 0 || u.is_active === false);
+    const statusPill = isActive ? "ok" : "off";
 
     tr.innerHTML = `
       <td style="font-weight:1000;">${esc(u.username)}</td>
       <td><span class="pill ${rolePill}">${esc(u.role)}</span></td>
-      <td><span class="pill ${statusPill}">${u.active === false ? "DISABLED" : "ACTIVE"}</span></td>
+      <td><span class="pill ${statusPill}">${isActive ? "ACTIVE" : "DISABLED"}</span></td>
       <td>
         <div class="rowActions">
           <button class="btn smallBtn" data-act="reset">Reset PW</button>
-          <button class="btn warn smallBtn" data-act="toggle">${u.active === false ? "Enable" : "Disable"}</button>
+          <button class="btn warn smallBtn" data-act="toggle">${isActive ? "Disable" : "Enable"}</button>
         </div>
       </td>
     `;
 
     tr.querySelector('[data-act="reset"]').onclick = () => openResetPwModal(u);
-    tr.querySelector('[data-act="toggle"]').onclick = () => toggleUser(u);
+    tr.querySelector('[data-act="toggle"]').onclick = () => toggleUser(u, isActive);
 
     el.usersTable.appendChild(tr);
   });
 }
+
 
 function openNewUserModal() {
   openModal(
@@ -281,7 +290,7 @@ function openNewUserModal() {
 
     if (!username || !password) return toast("Username & password required", "danger");
 
-    const r = await window.pos.createUser(token, { username, role, password });
+    const r = await window.pos.createUser({ username, role, password });
     if (!r.ok) return toast(r.message || "Create user failed", "danger");
 
     toast("User created", "success");
@@ -311,7 +320,7 @@ function openResetPwModal(u) {
     const newPassword = document.getElementById("rpw_new").value.trim();
     if (!newPassword) return toast("Password required", "danger");
 
-    const r = await window.pos.resetUserPassword(token, { userId: u.id, newPassword });
+    const r = await window.pos.resetUserPassword({ userId: u.id, newPassword });
     if (!r.ok) return toast(r.message || "Reset failed", "danger");
 
     toast("Password reset", "success");
@@ -320,12 +329,13 @@ function openResetPwModal(u) {
   };
 }
 
-async function toggleUser(u) {
-  const r = await window.pos.setUserActive(token, { userId: u.id, active: u.active === false });
+async function toggleUser(u, isActiveNow) {
+  const r = await window.pos.setUserActive({ userId: u.id, active: !isActiveNow });
   if (!r.ok) return toast(r.message || "Update failed", "danger");
   toast("User updated", "success");
   await loadUsers();
 }
+
 
 /* ---------------- PRODUCTS ---------------- */
 async function loadProducts() {
@@ -506,7 +516,12 @@ function openReceiveStockModal(productId = "") {
 
     if (!productId || qty <= 0) return toast("Product ID and qty required", "danger");
 
-    const r = await window.pos.receiveStock(token, { productId, qty, note });
+    const r = await window.pos.applyStockMove(token, {
+  productId: Number(productId),
+  qtyChange: Number(qty),
+  reason: "RECEIVE",
+  note
+});
     if (!r.ok) return toast(r.message || "Receive failed", "danger");
 
     toast("Stock received", "success");
@@ -547,7 +562,12 @@ function openAdjustStockModal(productId = "") {
 
     if (!productId || qtyDelta === 0) return toast("Product ID and delta required", "danger");
 
-    const r = await window.pos.adjustStock(token, { productId, qtyDelta, reason });
+    const r = await window.pos.applyStockMove(token, {
+  productId: Number(productId),
+  qtyChange: Number(qtyDelta),
+  reason: reason || "ADJUST",
+  note: reason
+});
     if (!r.ok) return toast(r.message || "Adjust failed", "danger");
 
     toast("Stock adjusted", "success");
@@ -561,7 +581,10 @@ async function loadMoves() {
   setStatus("Loading movements…");
   const productId = el.movesProductId.value.trim() || null;
 
-  const r = await window.pos.stockMovements(token, { productId, limit: 200 });
+  const r = await window.pos.stockMoves(token, {
+  productId: productId ? Number(productId) : undefined,
+  limit: 200
+});
   if (!r.ok) {
     setStatus("Moves failed");
     return toast(r.message || "Failed to load movements", "danger");

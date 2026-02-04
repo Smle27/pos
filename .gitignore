@@ -1,0 +1,86 @@
+# =========================
+# Node / Electron
+# =========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Electron build artifacts
+dist/
+out/
+release/
+build/
+*.asar
+
+# =========================
+# Environment files
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# Database (SQLite)
+# =========================
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+
+# =========================
+# Logs
+# =========================
+logs/
+*.log
+
+# =========================
+# OS / Editor junk
+# =========================
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/
+*.iml
+
+# =========================
+# Coverage / Testing
+# =========================
+coverage/
+.nyc_output/
+
+# =========================
+# Temporary / Cache
+# =========================
+.tmp/
+.cache/
+temp/
+.tmp.db
+
+# =========================
+# Electron runtime
+# =========================
+electron-debug.log
+
+# =========================
+# Certificates / Secrets
+# =========================
+*.pem
+*.key
+*.crt
+
+# =========================
+# Backups
+# =========================
+*.bak
+*.old
+
+# =========================
+# Git LFS (if you ever add)
+# =========================
+*.zip
+*.tar
+*.tar.gz

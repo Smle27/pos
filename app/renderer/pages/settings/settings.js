@@ -1,6 +1,7 @@
 import { toast } from "../../shared/components/toast.js";
 
 const token = localStorage.getItem("token");
+try { window.pos?.setToken?.(token); } catch (_) {}
 
 const printerName = document.getElementById("printerName");
 const paperSize = document.getElementById("paperSize");

@@ -6,6 +6,7 @@
 
 function saveAuth(token, user) {
   localStorage.setItem("token", token);
+  try { window.pos?.setToken?.(token); } catch (_) {}
   localStorage.setItem("user", JSON.stringify(user || {}));
 }
 

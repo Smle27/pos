@@ -1,13 +1,13 @@
 {
   "name": "pos-desktop",
   "version": "1.0.0",
-  "main": "app/main/main.js"
-,
+  "main": "app/main/main.js",
   "scripts": {
     "start": "electron .",
     "build": "electron-builder"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.3",
     "electron": "^30.0.0",
     "jsbarcode": "^3.12.1",
     "sql.js": "^1.13.0"
